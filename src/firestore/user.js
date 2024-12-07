@@ -21,3 +21,18 @@ export const createUser = async ({ email, name }) => {
     return Promise.reject(error);
   }
 };
+
+export const getUsers = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'users')); // Use getDocs for collections
+    const users = [];
+    
+    querySnapshot.forEach(doc => {
+      users.push({ id: doc.id, ...doc.data() }); // Add document data and ID to users array
+    });
+    return users;
+  } catch (error) {
+    console.error("Error getting users", error);
+    return Promise.reject(error);
+  }
+};

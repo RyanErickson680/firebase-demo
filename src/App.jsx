@@ -4,7 +4,7 @@ import viteLogo from '/vite.svg';
 import './App.css';
 import { db } from './firebase';
 import { collection, addDoc, getDoc, getDocs } from 'firebase/firestore';
-import { createUser } from './firestore/user';
+import { createUser, getUsers } from './firestore/user';
 
 
 function App() {
@@ -32,8 +32,8 @@ function App() {
     if (trimmedEmail && trimmedName) {
       const res = await createUser({email: trimmedEmail, name: trimmedName});
       console.log(res)
-      //setEmail('')
-      //setName('')
+      setEmail('')
+      setName('')
     } else {
       alert('Please fill out both fields')
     }
@@ -42,17 +42,11 @@ function App() {
 
   const getAllUsers = async () => {
     try {
-    const querySnapshot = await getDocs(collection(db, 'users')); // Use getDocs for collections
-    const users = [];
-    
-    querySnapshot.forEach(doc => {
-      users.push({ id: doc.id, ...doc.data() }); // Add document data and ID to users array
-    });
-    
-    setUsers(users); // Assuming setUsers updates your state or handles the data
-  } catch (error) {
-    console.error("Error getting users:", error);
-  }
+    const users = await getUsers();
+    setUsers(users); 
+    } catch (error) {
+      console.error("Error getting users:", error);
+    }
   }
 
   return (
